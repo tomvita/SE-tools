@@ -13,7 +13,7 @@ Pointersearcher-SE is the pointer searching tool. Many memory locations are dyna
 Here all the tools I made is package into one release for the latest version of atmosphere. 
 
 Quick Start: Search Memory
-1. Assuming you already have atmosphere install. Copy the content of the zip files for the switch into the root of your SD card. 
+1. Assuming you already have atmosphere install. Copy the content of the zip files for the switch into the root of your SD card. Restart your switch.  
 2. Launch the game. Press "HOME" when there is something interesting you want to search. Press "up" then "A". 
 3. Take the example of the game "Kingdom Rush Frontiers" and we will search for the amount of gold you have. You will see the following screen. 
 ![2020100712584600-6F1404E6C8413C7EFF592CBB30E5AB96](https://user-images.githubusercontent.com/68505331/95290669-5e9bf200-08a0-11eb-8815-962d98e98fb3.jpg)
