@@ -1,7 +1,6 @@
 SE tools is a set of tools for Nintendo Switch game memory hacking. 
 
-With SE tools you can search for memory location that will affect the behaviour of the game when modified.
-Create cheat codes that modify these memory location. 
+With SE tools you can search for memory location that will affect the behaviour of the game when modified and create cheat codes that modify these memory location. 
 
 SE tools consist of two major components and some optional components.
 
