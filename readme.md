@@ -53,13 +53,15 @@ Quick Start: Search Pointer Chain
 ![2020100714071100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95307071-c4957300-08ba-11eb-9f99-dfe38ee72172.jpg)
 ![2020100716351100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95307360-1ccc7500-08bb-11eb-920c-ae166a052187.jpg)
 8. On the switch press "ZL"+"+" to import bookmark. The imported bookmark has the label "import"
+9. To test whether this is the real deal. Change the game state and see if "import" points to the gold.
+10. Turns out that this pointer chain is only valid when some gold has been spend. The screen shot shows the pointer chain is able to resolve into the correct address of "gold3". 
 
-
-
-
-
-
-
+Quick Start: Create cheat code
+1. Edit the bookmark label to what you want to show as the cheat code label. 
+2. Edit the value of memory to what you want the code to set.
+3. To create cheat code to share with others choose the bookmark and press "Y". This will create a cheat code with the bookmark's label and set it to the current value at the memory location. 
+4. Press "ZL"+B to quite and reload to see the cheat code appear on the cheats section
+![2020100716491900-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95308950-1b03b100-08bd-11eb-830f-98c1101ce1fc.jpg)
 
 
 
