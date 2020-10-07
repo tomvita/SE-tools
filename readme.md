@@ -12,7 +12,7 @@ Pointersearcher-SE is the pointer searching tool. Many memory locations are dyna
 
 Here all the tools I made is package into one release for the latest version of atmosphere. 
 
-Quick Start: 
+Quick Start: Search Memory
 1. Assuming you already have atmosphere install. Copy the content of the zip files for the switch into the root of your SD card. 
 2. Launch the game. Press "HOME" when there is something interesting you want to search. Press "up" then "A". 
 3. Take the example of the game "Kingdom Rush Frontiers" and we will search for the amount of gold you have. You will see the following screen. 
@@ -36,6 +36,29 @@ Quick Start:
 ![2020100713421400-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95291857-f3075400-08a2-11eb-9d0e-b3b4c1743565.jpg)
 14. Since the value of the upper order bytes are zero maybe the datatype is u32. Go back to bookmark view. Press "ZL"+"R" to change the datatype to u32. Now enter a large value and see what happens. We have confirm that the data type is u32. 
 ![2020100713502000-6F1404E6C8413C7EFF592CBB30E5AB96](https://user-images.githubusercontent.com/68505331/95292469-18489200-08a4-11eb-9d85-bf48c81904d4.jpg)
+15. Next we test if this memory location is dynamic. Let try "RESTART". The memory looks to be the same. How about "QUIT" and come back. Now we see the memory location is no longer valid. We will need pointer in order to not need to keep repeating the search in this case. 
+![2020100714035600-6F1404E6C8413C7EFF592CBB30E5AB96](https://user-images.githubusercontent.com/68505331/95293438-fd771d00-08a5-11eb-84b4-b51f814248be.jpg)  
+16. We proceed to find the new memory location. 
+![2020100714071100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95293656-71b1c080-08a6-11eb-8e15-c87bea8476fc.jpg)
+
+Quick Start: Search Pointer Chain
+1. Next we will use the pointer searching tool on PC. Launch either pointersearcher.exe or pointersearcher64.exe (will need this for cases where more that 4Gbyte of memory is needed). Click on "Attach dmnt". 
+2. Fetch bookmark from EdiZon SE.
+3. Copy and paste into the TargetAddress1. Click on "Dump Ptr".
+4. When the dump is complete click on "Reset and Search". Adjust MaxDepth, OffsetNum and OffsetRange until candidates are found. In this example many targets are found.
+5. To perform a second dump go back to the game make the memory location of gold change. Now we have "gold2". Select "File2" and click on "Dump ptr" to make the second dump. Click on "Narrow Down Result" to reduce the number of targets.
+6. Click on "Export To EdiZon SE" to export the result ready for EdiZon SE to import into bookmark.
+7. Clock on "Push Export to EdiZon SE" which will push the file over to the switch.
+![pointer search example](https://user-images.githubusercontent.com/68505331/95306963-a3cd1d80-08ba-11eb-877c-ad2a09db6428.png)
+![2020100714071100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95307071-c4957300-08ba-11eb-9f99-dfe38ee72172.jpg)
+![2020100716351100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95307360-1ccc7500-08bb-11eb-920c-ae166a052187.jpg)
+8. On the switch press "ZL"+"+" to import bookmark. The imported bookmark has the label "import"
+
+
+
+
+
+
 
 
 
