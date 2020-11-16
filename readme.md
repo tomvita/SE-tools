@@ -63,6 +63,32 @@ Quick Start: Create cheat code
 4. Press "ZL"+B to quite and reload to see the cheat code appear on the cheats section
 ![2020100716491900-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95308950-1b03b100-08bd-11eb-830f-98c1101ce1fc.jpg)
 
+Quick start Unknown value search:
+
+Here we use the game "Zombie Blast Crew"
+![2020111618545200-8A979FD4D8350EA4A40B19001182DC1A](https://user-images.githubusercontent.com/68505331/99244931-c0eff700-283d-11eb-8950-58692275c64a.jpg)
+The life bar has the value of 1400. But after some direct value search we can't find a memory location that can be used to change this value.
+We now try unknown value search as the representation isn't direct. 
+![2020111622344400-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/99265093-42ef1880-285c-11eb-968f-d7e9f7151a74.jpg)
+![2020111618393100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/99261344-8abf7100-2857-11eb-932a-c4d4440ec17e.jpg)
+After the current value has been dumped go back to the game and let the life bar reduce a bit.
+![2020111618395100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/99261499-c5c1a480-2857-11eb-903d-907afa158fab.jpg)
+Continue with [--] search. 
+You will need to do [--] or [++] search until the candidate list is reduced to a manageable amount. 
+Recover HP with potion if needed. In general you should not allow the character to die because the address may change. In this case 
+it does not change if you die but at this stage you won't know yet.
+![2020111618452800-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/99262910-7b412780-2859-11eb-9b66-4b0f198eddfa.jpg)
+![2020111618452600-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/99263102-b6dbf180-2859-11eb-88a8-1880eddf1e62.jpg)
+Now that there is not that many candidate left it's time to take a look at them. 
+Those that looks promising you have to hack them to see if it works. 
+Sometimes hacking value may cause the switch to crash. It is just too bad that the progress would be lost. This is a hazard that 
+cannot be avoided. 
+After some trial and error you will find that hacking the two value that is close to the display value divided by 10 makes a difference.
+One will keep you alive and the other will affect the life bar but you will still die. 
+Freeze both value will give you infinite HP. You will find that the life bar don't directly correspond to the value that affects the life
+bar. This is rather common. In this case probably the code only update the life bar when there is change and it put up the value you 
+hack - HP that was just lost. 
+Now with these two memory found you are ready to proceed to find pointers for these two value.
 
 
 This source can be found by following the individual link: 
