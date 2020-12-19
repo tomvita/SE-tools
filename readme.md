@@ -101,7 +101,7 @@ Quick start moon jump search:
 8. Added the found address to bookmark and label it moon jump. 
 9. Go to the bookmark you just added. Edit the value to a value you want this moon jump to be (how fast the character will rise). Press ZL+A to add this to code. Press ZL+B to reload dmnt and see that a new code has been added to the cheat code list.
 10. Choose this code you just created. Press Rstick to assign a moon jump button. Enable this code and test your newly created moon jump.
-11. Repeat from step 9 and 10 if the value you set don't work well. When you are satisfied with you moon jump proceed to next step. 
+11. Repeat from step 9 and 10 if the value you set don't work well. When you are satisfied with your moon jump proceed to next step. 
 12. The memory location you found is not static in most cases. You may have to replace the static memory with a pointer. Once you found the pointer you can either replace the static code or repeat step 7 to 10. 
 
 
