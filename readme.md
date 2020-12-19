@@ -94,10 +94,10 @@ Quick start moon jump search:
 1. For some games you can find moon jump this way. Please note that this isn't applicable to all games. 
 2. For many game a floating point number is added to make the character rise or fall.
 3. Press the jump button. Make sure the character is on the rise then pause the game. Do a range search. 
-4. Next pause the game when the character is falling. Do a range search of the opposite sign. (i.e. if you search for a positive range now search for a negative range and vice versa). 
+4. Next pause the game when the character is falling. Do a range search of the opposite polarity. (i.e. if you search for a positive range now search for a negative range and vice versa). 
 5. Repeat step 3 and 4 until you narrow down to a small candidate list. 
 6. Pause the game while the character is on the rise. Go to the candidate list and freeze a few of them. Go back to the game and see if the character keep rising continously. If it does one of the candidates you frozen is the moon jump memory location. Now unfreeze them one by one until the character stop rising. If nothing happens continue until the candidate list has been exhaused. 
-7. If you found the address proceed with step 8, if not repeat from step 3 with a different range or datatype, bear in mind that this method is not applicable to all games.
+7. If you found the address proceed with step 8, if not repeat from step 3 with a different range, polarity or datatype, bear in mind that this method is not applicable to all games.
 8. Added the found address to bookmark and label it moon jump. 
 9. Go to the bookmark you just added. Edit the value to a value you want this moon jump to be (how fast the character will rise). Press ZL+A to add this to code. Press ZL+B to reload dmnt and see that a new code has been added to the cheat code list.
 10. Choose this code you just created. Press Rstick to assign a moon jump button. Enable this code and test your newly created moon jump.
