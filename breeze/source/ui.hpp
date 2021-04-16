@@ -21,6 +21,7 @@
 #include <optional>
 #include <nanovg.h>
 #include <switch.h>
+#include <string>
 #include "ams_su.h"
 #include "dmntcht.h"
 
@@ -144,12 +145,38 @@ namespace dbk {
             virtual void Update(u64 ns) override;
             virtual void Draw(NVGcontext *vg, u64 ns) override;
     };
+            static const std::vector<u32> buttonCodes = {0x80000001,
+                                                         0x80000002,
+                                                         0x80000004,
+                                                         0x80000008,
+                                                         0x80000010,
+                                                         0x80000020,
+                                                         0x80000040,
+                                                         0x80000080,
+                                                         0x80000100,
+                                                         0x80000200,
+                                                         0x80000400,
+                                                         0x80000800,
+                                                         0x80001000,
+                                                         0x80002000,
+                                                         0x80004000,
+                                                         0x80008000,
+                                                         0x80010000,
+                                                         0x80020000,
+                                                         0x80040000,
+                                                         0x80080000,
+                                                         0x80100000,
+                                                         0x80200000,
+                                                         0x80400000,
+                                                         0x80800000};
 
-    class CheatMenu : public Menu {
+            static const std::vector<std::string> buttonNames = {"\uE0A0 ", "\uE0A1 ", "\uE0A2 ", "\uE0A3 ", "\uE0C4 ", "\uE0C5 ", "\uE0A4 ", "\uE0A5 ", "\uE0A6 ", "\uE0A7 ", "\uE0B3 ", "\uE0B4 ", "\uE0B1 ", "\uE0AF ", "\uE0B2 ", "\uE0B0 ", "\uE091 ", "\uE092 ", "\uE090 ", "\uE093 ", "\uE145 ", "\uE143 ", "\uE146 ", "\uE144 "};
+
+      class CheatMenu : public Menu {
         private:
-            struct FileEntry {
-                char name[FS_MAX_PATH];
-            };
+            // struct FileEntry {
+            //     char name[FS_MAX_PATH];
+            // };
         private:
             static constexpr size_t MaxFileRows = 11;
 
@@ -168,9 +195,8 @@ namespace dbk {
             float m_scroll_offset;
             float m_touch_start_scroll_offset;
             bool m_touch_finalize_selection;
-            DmntCheatEntry *m_cheats = nullptr;
-            u64 m_cheatCnt = 0;
-            bool *m_cheatDelete = nullptr;
+            bool m_editCheat = false;
+            u32 keycode = 0x80000000, keycount = 0;
             int m_enabledcnt = 0, m_totalopcode = 0;
 
             Result PopulateCheatEntries();

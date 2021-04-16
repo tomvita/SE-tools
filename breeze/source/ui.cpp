@@ -18,7 +18,6 @@
 #include <cstdio>
 #include <cstring>
 #include <dirent.h>
-#include <string>
 #include "ui.hpp"
 #include "ui_util.hpp"
 #include "assert.hpp"
@@ -567,25 +566,16 @@ namespace dbk {
 
     Result CheatMenu::PopulateCheatEntries() {
         u64 cheatCnt;
-        if (m_cheatCnt > 0)
-        {
-            if (m_cheats != nullptr)
-                delete m_cheats;
-            if (m_cheatDelete != nullptr)
-                delete m_cheatDelete;
-            m_cheats = nullptr;
-            m_cheatDelete = nullptr;
-        };
+        DmntCheatEntry *m_cheats = nullptr;
         dmntchtGetCheatCount(&cheatCnt);
+        m_cheat_entries.clear();
         if (cheatCnt > 0)
         {
             m_cheats = new DmntCheatEntry[cheatCnt];
-            m_cheatDelete = new bool[cheatCnt];
-            for (u64 i = 0; i < cheatCnt; i++)
-                m_cheatDelete[i] = false;
             dmntchtGetCheats(m_cheats, cheatCnt, 0, &cheatCnt);
             for (u64 i = 0; i < cheatCnt; i++)
                 m_cheat_entries.push_back(m_cheats[i]);
+            delete m_cheats;
         }
         else
         {
@@ -595,7 +585,6 @@ namespace dbk {
             strncpy(entry.definition.readable_name, nocheatstr, sizeof(entry.definition.readable_name) - 1);
             m_cheat_entries.push_back(entry);
         }
-        m_cheatCnt = cheatCnt;
         return 0;
     }
 
@@ -723,22 +712,70 @@ namespace dbk {
         u64 k_down = padGetButtonsDown(&g_pad);
 
         /* Go back if B is pressed. */
-        if (k_down & HidNpadButton_B) {
+        if ((k_down & HidNpadButton_B) && !m_editCheat) {
             ReturnToPreviousMenu();
             return;
         }
 
         /* Finalize selection on pressing A. */
-        if (k_down & HidNpadButton_A) {
+        if ((k_down & HidNpadButton_A) && !m_editCheat)  {
             this->FinalizeSelection();
+        }
+
+        if ((k_down & HidNpadButton_StickR) && !m_editCheat)
+        {
+            keycode = 0x80000000;
+            keycount = 1;
+            m_editCheat = true;
+            do
+            {
+                padUpdate(&g_pad);
+            } while (!(padGetButtonsUp(&g_pad) & HidNpadButton_StickR));
+            return;
         }
 
         /* Update touch input. */
         this->UpdateTouches();
 
         const u32 prev_index = m_current_index;
+        if ((m_editCheat) && (k_down != 0))
+        {
+            keycode = keycode | k_down;
+            keycount--;
+            if (keycount > 0) return;
+            m_editCheat = false;
+            // if (buttonStr(keycode) != "")
+            {
+                // edit cheat
+                if ((m_cheat_entries[m_current_index].definition.opcodes[0] & 0xF0000000) == 0x80000000)
+                {
+                    m_cheat_entries[m_current_index].definition.opcodes[0] = keycode;
+                }
+                else
+                {
+                    if (m_cheat_entries[m_current_index].definition.num_opcodes < 0x100 + 2)
+                    {
+                        m_cheat_entries[m_current_index].definition.opcodes[m_cheat_entries[m_current_index].definition.num_opcodes + 1] = 0x20000000;
 
-        if (k_down & HidNpadButton_ZR) {
+                        for (u32 i = m_cheat_entries[m_current_index].definition.num_opcodes; i > 0; i--)
+                        {
+                            m_cheat_entries[m_current_index].definition.opcodes[i] = m_cheat_entries[m_current_index].definition.opcodes[i - 1];
+                        }
+                        m_cheat_entries[m_current_index].definition.num_opcodes += 2;
+                        m_cheat_entries[m_current_index].definition.opcodes[0] = keycode;
+                    }
+                }
+                // modify cheat
+                dmntchtRemoveCheat(m_cheat_entries[m_current_index].cheat_id);
+                u32 outid = 0;
+                dmntchtAddCheat(&(m_cheat_entries[m_current_index].definition), m_cheat_entries[m_current_index].enabled, &outid);
+                // if (outid != m_cheat_entries[m_current_index].cheat_id)
+                //     sprintf(m_cheat_entries[m_current_index].definition.readable_name, "out id not the same! %d %d", outid, m_cheat_entries[m_current_index].cheat_id);
+                // m_cheat_entries[m_current_index].cheat_id = outid;
+                PopulateCheatEntries();
+            };
+            return;
+        } else if (k_down & HidNpadButton_ZR) {
             /* Page down. */
             m_current_index += 10;
             if (m_current_index >= (m_cheat_entries.size() - 1)) {
@@ -776,32 +813,6 @@ namespace dbk {
         const float x = g_screen_width / 2.0f - WindowWidth / 2.0f;
         const float y = g_screen_height / 2.0f - WindowHeight / 2.0f;
         
-        static const std::vector<u32> buttonCodes = {0x80000001,
-                                                     0x80000002,
-                                                     0x80000004,
-                                                     0x80000008,
-                                                     0x80000010,
-                                                     0x80000020,
-                                                     0x80000040,
-                                                     0x80000080,
-                                                     0x80000100,
-                                                     0x80000200,
-                                                     0x80000400,
-                                                     0x80000800,
-                                                     0x80001000,
-                                                     0x80002000,
-                                                     0x80004000,
-                                                     0x80008000,
-                                                     0x80010000,
-                                                     0x80020000,
-                                                     0x80040000,
-                                                     0x80080000,
-                                                     0x80100000,
-                                                     0x80200000,
-                                                     0x80400000,
-                                                     0x80800000};
-         
-        static const std::vector<std::string> buttonNames = {"\uE0A0 ", "\uE0A1 ", "\uE0A2 ", "\uE0A3 ", "\uE0C4 ", "\uE0C5 ", "\uE0A4 ", "\uE0A5 ", "\uE0A6 ", "\uE0A7 ", "\uE0B3 ", "\uE0B4 ", "\uE0B1 ", "\uE0AF ", "\uE0B2 ", "\uE0B0 ", "\uE091 ", "\uE092 ", "\uE090 ", "\uE093 ", "\uE145 ", "\uE143 ", "\uE146 ", "\uE144 "};
         char status_str[300];
         
         // sprintf(status_str,"Cheat %d/%ld  Opcode count [ %d ]  Cheat enabled [ %d ]  Opcode used [ %d ]  Opcode available [ %d ]",m_current_index+1,m_cheat_entries.size(),
@@ -819,9 +830,6 @@ namespace dbk {
         for (u32 i = 0; i < m_cheat_entries.size(); i++) {
             DmntCheatEntry &entry = m_cheat_entries[i];
             auto style = ButtonStyle::FileSelect;
-            if (i == m_current_index) {
-                style = ButtonStyle::FileSelectSelected;
-            }
             char namestr[100] = "";
             if (entry.enabled)
             {
@@ -837,6 +845,11 @@ namespace dbk {
             for (u32 i = 0; i < buttonCodes.size(); i++) {
                 if ((buttoncode & buttonCodes[i]) == buttonCodes[i])
                     strcat(namestr, buttonNames[i].c_str());
+            }
+            if (i == m_current_index) {
+                style = ButtonStyle::FileSelectSelected;
+                if (m_editCheat)
+                    sprintf(namestr, "Press conditional key for ");
             }
             strcat(namestr, entry.definition.readable_name);
             DrawButton(vg, namestr, x + TextBackgroundOffset + FileRowHorizontalInset, y + TitleGap + FileRowGap + i * (FileRowHeight + FileRowGap) - m_scroll_offset, WindowWidth - (TextBackgroundOffset + FileRowHorizontalInset) * 2.0f, FileRowHeight, style, ns);
