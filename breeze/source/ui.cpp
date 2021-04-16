@@ -725,7 +725,7 @@ namespace dbk {
         if ((k_down & HidNpadButton_StickR) && !m_editCheat)
         {
             keycode = 0x80000000;
-            keycount = 1;
+            keycount = m_combo;
             m_editCheat = true;
             do
             {
@@ -742,6 +742,10 @@ namespace dbk {
         {
             keycode = keycode | k_down;
             keycount--;
+            do
+            {
+                padUpdate(&g_pad);
+            } while (!(padGetButtonsUp(&g_pad) & k_down));
             if (keycount > 0) return;
             m_editCheat = false;
             // if (buttonStr(keycode) != "")
@@ -849,7 +853,7 @@ namespace dbk {
             if (i == m_current_index) {
                 style = ButtonStyle::FileSelectSelected;
                 if (m_editCheat)
-                    sprintf(namestr, "Press conditional key for ");
+                    sprintf(namestr, "keycount = %d Press conditional key for ", keycount);
             }
             strcat(namestr, entry.definition.readable_name);
             DrawButton(vg, namestr, x + TextBackgroundOffset + FileRowHorizontalInset, y + TitleGap + FileRowGap + i * (FileRowHeight + FileRowGap) - m_scroll_offset, WindowWidth - (TextBackgroundOffset + FileRowHorizontalInset) * 2.0f, FileRowHeight, style, ns);
