@@ -478,11 +478,13 @@ namespace dbk {
 
     MainMenu::MainMenu() : Menu(nullptr) {
         const float x = g_screen_width / 2.0f - WindowWidth / 2.0f;
-        const float y = g_screen_height / 2.0f - (WindowHeight + ButtonHeight + VerticalGap) / 2.0f;
+        const float y = g_screen_height / 2.0f - (WindowHeight + (ButtonHeight + VerticalGap)*2) / 2.0f;
 
         this->AddButton(CheatsButtonId, "Cheats",        x + HorizontalInset, y + TitleGap,                                  WindowWidth - HorizontalInset * 2, ButtonHeight);
+
         this->AddButton(SearchButtonId, "Search Memory", x + HorizontalInset, y + TitleGap + ButtonHeight + VerticalGap,     WindowWidth - HorizontalInset * 2, ButtonHeight);
-        this->AddButton(ExitButtonId,   "Exit",          x + HorizontalInset, y + TitleGap + (ButtonHeight + VerticalGap)*2, WindowWidth - HorizontalInset * 2, ButtonHeight);
+        this->AddButton(DownloadButtonId,   "Download",  x + HorizontalInset, y + TitleGap + (ButtonHeight + VerticalGap)*2, WindowWidth - HorizontalInset * 2, ButtonHeight);
+        this->AddButton(ExitButtonId,   "Exit",          x + HorizontalInset, y + TitleGap + (ButtonHeight + VerticalGap)*3, WindowWidth - HorizontalInset * 2, ButtonHeight);
         this->SetButtonSelected(CheatsButtonId, true);
     }
 
@@ -535,6 +537,11 @@ namespace dbk {
                     ChangeMenu(std::make_shared<MessageMenu>(g_current_menu, "Search Memory", "Feature not implemented yet."));
                     return;
                 }
+                case DownloadButtonId:
+                {
+                    ChangeMenu(std::make_shared<MessageMenu>(g_current_menu, "Download", "Feature not implemented yet."));
+                    return;
+                }
                 case ExitButtonId:
                     g_exit_requested = true;
                     return;
@@ -550,7 +557,7 @@ namespace dbk {
     }
 
     void MainMenu::Draw(NVGcontext *vg, u64 ns) {
-        DrawWindow(vg, "Breeze", g_screen_width / 2.0f - WindowWidth / 2.0f, g_screen_height / 2.0f - (WindowHeight + ButtonHeight + VerticalGap) / 2.0f, WindowWidth, WindowHeight + ButtonHeight + VerticalGap);
+        DrawWindow(vg, "Breeze", g_screen_width / 2.0f - WindowWidth / 2.0f, g_screen_height / 2.0f - (WindowHeight + (ButtonHeight + VerticalGap)*2) / 2.0f, WindowWidth, WindowHeight + (ButtonHeight + VerticalGap)*2);
         this->DrawButtons(vg, ns);
     }
     
@@ -706,6 +713,21 @@ namespace dbk {
         uint32_t id = m_cheat_entries[m_current_index].cheat_id;
         dmntchtToggleCheat(id);
         dmntchtGetCheatById(&(m_cheat_entries[m_current_index]), id);
+    }
+
+    void CheatMenu::RemoveKeyfromSelection() {
+        if ((m_cheat_entries[m_current_index].definition.opcodes[0] & 0xF0000000) == 0x80000000 && (m_cheat_entries[m_current_index].definition.opcodes[m_cheat_entries[m_current_index].definition.num_opcodes - 1] & 0xF0000000) == 0x20000000)
+        {
+            for (u32 i = 0; i < m_cheat_entries[m_current_index].definition.num_opcodes - 1; i++)
+            {
+                m_cheat_entries[m_current_index].definition.opcodes[i] = m_cheat_entries[m_current_index].definition.opcodes[i + 1];
+            }
+            m_cheat_entries[m_current_index].definition.num_opcodes -= 2;
+        }
+        dmntchtRemoveCheat(m_cheat_entries[m_current_index].cheat_id);
+        u32 outid = 0;
+        dmntchtAddCheat(&(m_cheat_entries[m_current_index].definition), m_cheat_entries[m_current_index].enabled, &outid);
+        PopulateCheatEntries();
     }
 
     void CheatMenu::Update(u64 ns) {

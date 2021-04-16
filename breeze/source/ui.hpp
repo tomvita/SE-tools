@@ -134,7 +134,8 @@ namespace dbk {
         private:
             static constexpr u32 CheatsButtonId = 0;
             static constexpr u32 SearchButtonId = 1;
-            static constexpr u32 ExitButtonId = 2;
+            static constexpr u32 DownloadButtonId = 2;
+            static constexpr u32 ExitButtonId = 3;
 
             static constexpr float WindowWidth             = 400.0f;
             static constexpr float WindowHeight            = 240.0f;
@@ -207,6 +208,7 @@ namespace dbk {
         bool IsEntryTouched(u32 i);
         void UpdateTouches();
         void FinalizeSelection();
+        void RemoveKeyfromSelection();
 
     public:
         CheatMenu(std::shared_ptr<Menu> prev_menu, const char *root);
