@@ -23,8 +23,8 @@
 #include <switch.h>
 #include "ams_su.h"
 #include "dmntcht.h"
-namespace dbk {
 
+namespace dbk {
     struct Button {
         static constexpr u32 InvalidButtonId = -1;
 

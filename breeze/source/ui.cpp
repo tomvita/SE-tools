@@ -18,6 +18,7 @@
 #include <cstdio>
 #include <cstring>
 #include <dirent.h>
+#include <string>
 #include "ui.hpp"
 #include "ui_util.hpp"
 #include "assert.hpp"
@@ -805,6 +806,33 @@ namespace dbk {
     void CheatMenu::Draw(NVGcontext *vg, u64 ns) {
         const float x = g_screen_width / 2.0f - WindowWidth / 2.0f;
         const float y = g_screen_height / 2.0f - WindowHeight / 2.0f;
+        
+        static const std::vector<u32> buttonCodes = {0x80000001,
+                                                     0x80000002,
+                                                     0x80000004,
+                                                     0x80000008,
+                                                     0x80000010,
+                                                     0x80000020,
+                                                     0x80000040,
+                                                     0x80000080,
+                                                     0x80000100,
+                                                     0x80000200,
+                                                     0x80000400,
+                                                     0x80000800,
+                                                     0x80001000,
+                                                     0x80002000,
+                                                     0x80004000,
+                                                     0x80008000,
+                                                     0x80010000,
+                                                     0x80020000,
+                                                     0x80040000,
+                                                     0x80080000,
+                                                     0x80100000,
+                                                     0x80200000,
+                                                     0x80400000,
+                                                     0x80800000};
+         
+        static const std::vector<std::string> buttonNames = {"\uE0A0 ", "\uE0A1 ", "\uE0A2 ", "\uE0A3 ", "\uE0C4 ", "\uE0C5 ", "\uE0A4 ", "\uE0A5 ", "\uE0A6 ", "\uE0A7 ", "\uE0B3 ", "\uE0B4 ", "\uE0B1 ", "\uE0AF ", "\uE0B2 ", "\uE0B0 ", "\uE091 ", "\uE092 ", "\uE090 ", "\uE093 ", "\uE145 ", "\uE143 ", "\uE146 ", "\uE144 "};
         char status_str[300];
         
         // sprintf(status_str,"Cheat %d/%ld  Opcode count [ %d ]  Cheat enabled [ %d ]  Opcode used [ %d ]  Opcode available [ %d ]",m_current_index+1,m_cheat_entries.size(),
@@ -836,6 +864,17 @@ namespace dbk {
             {
                 strcat(namestr, "          ");
             };
+            int buttoncode = entry.definition.opcodes[0];
+            for (u32 i = 0; i < buttonCodes.size(); i++)
+            {
+                if ((buttoncode & buttonCodes[i]) == buttonCodes[i])
+                {   
+                //     char bt[10];
+                // sprintf(bt,buttonNames[i].c_str());
+                //     // strcpy(bt,(buttonNames[i]).c_str());
+                    strcat(namestr, buttonNames[i].c_str());
+                };
+            }
             strcat(namestr, entry.definition.readable_name);
             DrawButton(vg, namestr, x + TextBackgroundOffset + FileRowHorizontalInset, y + TitleGap + FileRowGap + i * (FileRowHeight + FileRowGap) - m_scroll_offset, WindowWidth - (TextBackgroundOffset + FileRowHorizontalInset) * 2.0f, FileRowHeight, style, ns);
         }
