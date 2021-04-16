@@ -756,6 +756,11 @@ namespace dbk {
             return;
         }
 
+        if (k_down & HidNpadButton_StickL)
+        {
+            RemoveKeyfromSelection();
+        }
+        
         /* Update touch input. */
         this->UpdateTouches();
 
