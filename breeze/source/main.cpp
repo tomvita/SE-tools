@@ -129,11 +129,18 @@ class Breeze : public CApplication {
 
 
             PlFontData font;
+            /* Import standard font. */            
             if (R_FAILED(rc = plGetSharedFontByType(&font, PlSharedFontType_Standard))) {
                 fatalThrow(rc);
             }
-
-            m_standard_font = nvgCreateFontMem(m_vg, "switch-standard", static_cast<u8 *>(font.address), font.size, 0);
+            nvgCreateFontMem(m_vg, "switch-standard", static_cast<u8 *>(font.address), font.size, 0);
+            /* Import extended font. (special characters) */
+            if (R_FAILED(rc = plGetSharedFontByType(&font, PlSharedFontType_NintendoExt))) {
+                fatalThrow(rc);
+            }
+            nvgCreateFontMem(m_vg, "switch-ext",      static_cast<u8 *>(font.address), font.size, 0);
+            /* Have extended font fallback onto standard font when characters are missing. */
+            m_standard_font = nvgAddFallbackFont(m_vg, "switch-standard", "switch-ext" );
         }
 
         ~Breeze() {

@@ -550,7 +550,7 @@ namespace dbk {
     }
 
     void MainMenu::Draw(NVGcontext *vg, u64 ns) {
-        DrawWindow(vg, "Breeze", g_screen_width / 2.0f - WindowWidth / 2.0f, g_screen_height / 2.0f - (WindowHeight + ButtonHeight + VerticalGap) / 2.0f, WindowWidth, WindowHeight + ButtonHeight + VerticalGap);
+        DrawWindow(vg, "\uE105 Breeze", g_screen_width / 2.0f - WindowWidth / 2.0f, g_screen_height / 2.0f - (WindowHeight + ButtonHeight + VerticalGap) / 2.0f, WindowWidth, WindowHeight + ButtonHeight + VerticalGap);
         this->DrawButtons(vg, ns);
     }
     
