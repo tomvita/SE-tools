@@ -498,7 +498,7 @@ namespace dbk {
             switch (activated_button->id) {
                 case CheatsButtonId:
                 {
-                    const auto file_menu = std::make_shared<FileMenu>(g_current_menu, "/");
+                    const auto cheat_menu = std::make_shared<CheatMenu>(g_current_menu, "/");
 
                     Result rc = 0;
                     u64 hardware_type;
@@ -523,9 +523,9 @@ namespace dbk {
                     /* Warn if we're working with a patched unit. */
                     const bool is_erista = hardware_type == 0 || hardware_type == 1;
                     if (is_erista && has_rcm_bug_patch && !is_emummc) {
-                        ChangeMenu(std::make_shared<WarningMenu>(g_current_menu, file_menu, "Warning: Patched unit detected", "You may burn fuses or render your switch inoperable."));
+                        ChangeMenu(std::make_shared<WarningMenu>(g_current_menu, cheat_menu, "Warning: Patched unit detected", "You may burn fuses or render your switch inoperable."));
                     } else {
-                        ChangeMenu(file_menu);
+                        ChangeMenu(cheat_menu);
                     }
 
                     return;
@@ -550,8 +550,280 @@ namespace dbk {
     }
 
     void MainMenu::Draw(NVGcontext *vg, u64 ns) {
-        DrawWindow(vg, "SE tools", g_screen_width / 2.0f - WindowWidth / 2.0f, g_screen_height / 2.0f - (WindowHeight + ButtonHeight + VerticalGap) / 2.0f, WindowWidth, WindowHeight + ButtonHeight + VerticalGap);
+        DrawWindow(vg, "Breeze", g_screen_width / 2.0f - WindowWidth / 2.0f, g_screen_height / 2.0f - (WindowHeight + ButtonHeight + VerticalGap) / 2.0f, WindowWidth, WindowHeight + ButtonHeight + VerticalGap);
         this->DrawButtons(vg, ns);
+    }
+    
+    CheatMenu::CheatMenu(std::shared_ptr<Menu> prev_menu, const char *root) : Menu(prev_menu), m_current_index(0), m_scroll_offset(0), m_touch_start_scroll_offset(0), m_touch_finalize_selection(false) {
+        Result rc = 0;
+
+        strncpy(m_root, root, sizeof(m_root)-1);
+
+        if (R_FAILED(rc = this->PopulateCheatEntries())) {
+            fatalThrow(rc);
+        }
+    }
+
+    Result CheatMenu::PopulateCheatEntries() {
+        u64 cheatCnt;
+        if (m_cheatCnt > 0)
+        {
+            if (m_cheats != nullptr)
+                delete m_cheats;
+            if (m_cheatDelete != nullptr)
+                delete m_cheatDelete;
+            m_cheats = nullptr;
+            m_cheatDelete = nullptr;
+        };
+        dmntchtGetCheatCount(&cheatCnt);
+        if (cheatCnt > 0)
+        {
+            m_cheats = new DmntCheatEntry[cheatCnt];
+            m_cheatDelete = new bool[cheatCnt];
+            for (u64 i = 0; i < cheatCnt; i++)
+                m_cheatDelete[i] = false;
+            dmntchtGetCheats(m_cheats, cheatCnt, 0, &cheatCnt);
+            for (u64 i = 0; i < cheatCnt; i++)
+                m_cheat_entries.push_back(m_cheats[i]);
+        }
+        else
+        {
+            DmntCheatEntry entry;
+            entry.definition.num_opcodes = 0;
+            char nocheatstr[] = "No cheat availabe";
+            strncpy(entry.definition.readable_name, nocheatstr, sizeof(entry.definition.readable_name) - 1);
+            m_cheat_entries.push_back(entry);
+        }
+        m_cheatCnt = cheatCnt;
+        return 0;
+    }
+
+    bool CheatMenu::IsSelectionVisible() {
+        const float visible_start = m_scroll_offset;
+        const float visible_end = visible_start + FileListHeight;
+        const float entry_start = static_cast<float>(m_current_index) * (FileRowHeight + FileRowGap);
+        const float entry_end = entry_start + (FileRowHeight + FileRowGap);
+        return entry_start >= visible_start && entry_end <= visible_end;
+    }
+
+    void CheatMenu::ScrollToSelection() {
+        const float visible_start = m_scroll_offset;
+        const float visible_end = visible_start + FileListHeight;
+        const float entry_start = static_cast<float>(m_current_index) * (FileRowHeight + FileRowGap);
+        const float entry_end = entry_start + (FileRowHeight + FileRowGap);
+
+        if (entry_end > visible_end) {
+            m_scroll_offset += entry_end - visible_end;
+        } else if (entry_end < visible_end) {
+            m_scroll_offset = entry_start;
+        }
+    }
+
+    bool CheatMenu::IsEntryTouched(u32 i) {
+        const float x = g_screen_width / 2.0f - WindowWidth / 2.0f;
+        const float y = g_screen_height / 2.0f - WindowHeight / 2.0f;
+
+        HidTouchScreenState current_touch;
+        hidGetTouchScreenStates(&current_touch, 1);
+
+        /* Check if the tap is within the x bounds. */
+        if (current_touch.touches[0].x >= x + TextBackgroundOffset + FileRowHorizontalInset && current_touch.touches[0].x <= WindowWidth - (TextBackgroundOffset + FileRowHorizontalInset) * 2.0f) {
+            const float y_min = y + TitleGap + FileRowGap + i * (FileRowHeight + FileRowGap) - m_scroll_offset;
+            const float y_max = y_min + FileRowHeight;
+
+            /* Check if the tap is within the y bounds. */
+            if (current_touch.touches[0].y >= y_min && current_touch.touches[0].y <= y_max) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void CheatMenu::UpdateTouches() {
+        /* Setup values on initial touch. */
+        if (g_started_touching) {
+            m_touch_start_scroll_offset = m_scroll_offset;
+
+            /* We may potentially finalize the selection later if we start off touching it. */
+            if (this->IsEntryTouched(m_current_index)) {
+                m_touch_finalize_selection = true;
+            }
+        }
+
+        /* Scroll based on touch movement. */
+        if (g_touches_moving) {
+            HidTouchScreenState current_touch;
+            hidGetTouchScreenStates(&current_touch, 1);
+
+            const int dist_y = current_touch.touches[0].y - g_start_touch.touches[0].y;
+            float new_scroll_offset = m_touch_start_scroll_offset - static_cast<float>(dist_y);
+            float max_scroll = (FileRowHeight + FileRowGap) * static_cast<float>(m_cheat_entries.size()) - FileListHeight;
+
+            /* Don't allow scrolling if there is not enough elements. */
+            if (max_scroll < 0.0f) {
+                max_scroll = 0.0f;
+            }
+
+            /* Don't allow scrolling before the first element. */
+            if (new_scroll_offset < 0.0f) {
+                new_scroll_offset = 0.0f;
+            }
+
+            /* Don't allow scrolling past the last element. */
+            if (new_scroll_offset > max_scroll) {
+                new_scroll_offset = max_scroll;
+            }
+
+            m_scroll_offset = new_scroll_offset;
+        }
+
+        /* Select any tapped entries. */
+        if (g_tapping) {
+            for (u32 i = 0; i < m_cheat_entries.size(); i++) {
+                if (this->IsEntryTouched(i)) {
+                    /* The current index is checked later. */
+                    if (i == m_current_index) {
+                        continue;
+                    }
+
+                    m_current_index = i;
+
+                    /* Don't finalize selection if we touch something else. */
+                    m_touch_finalize_selection = false;
+                    break;
+                }
+            }
+        }
+
+        /* Don't finalize selection if we aren't finished and we've either stopped tapping or are no longer touching the selection. */
+        if (!g_finished_touching && (!g_tapping || !this->IsEntryTouched(m_current_index))) {
+            m_touch_finalize_selection = false;
+        }
+
+        /* Finalize selection if the currently selected entry is touched for the second time. */
+        if (g_finished_touching && m_touch_finalize_selection) {
+            this->FinalizeSelection();
+            m_touch_finalize_selection = false;
+        }
+    }
+
+    void CheatMenu::FinalizeSelection() {
+        if (!m_cheat_entries[m_current_index].enabled && (m_cheat_entries[m_current_index].definition.num_opcodes + m_totalopcode > 1024))
+        {
+            ChangeMenu(std::make_shared<MessageMenu>(g_current_menu, "Cannot turn on more cheats", "You need to remove some cheats to enable this one."));
+            return;
+        };
+        uint32_t id = m_cheat_entries[m_current_index].cheat_id;
+        dmntchtToggleCheat(id);
+        dmntchtGetCheatById(&(m_cheat_entries[m_current_index]), id);
+        // DBK_ABORT_UNLESS(m_current_index < m_cheat_entries.size());
+        // FileEntry &entry = m_cheat_entries[m_current_index];
+
+        // /* Determine the selected path. */
+        // char current_path[FS_MAX_PATH] = {};
+        // const int path_len = snprintf(current_path, sizeof(current_path), "%s%s/", m_root, entry.name);
+        // DBK_ABORT_UNLESS(path_len >= 0 && path_len < static_cast<int>(sizeof(current_path)));
+
+        // /* Determine if the chosen path is the bottom level. */
+        // Result rc = 0;
+        // bool bottom_level;
+        // if (R_FAILED(rc = IsPathBottomLevel(current_path, &bottom_level))) {
+        //     fatalThrow(rc);
+        // }
+
+        // /* Show exfat settings or the next file menu. */
+        // if (bottom_level) {
+        //     /* Set the update path. */
+        //     snprintf(g_update_path, sizeof(g_update_path), "%s", current_path);
+
+        //     /* Change the menu. */
+        //     ChangeMenu(std::make_shared<ValidateUpdateMenu>(g_current_menu));
+        // } else {
+        //     ChangeMenu(std::make_shared<CheatMenu>(g_current_menu, current_path));
+        // }
+    }
+
+    void CheatMenu::Update(u64 ns) {
+        u64 k_down = padGetButtonsDown(&g_pad);
+
+        /* Go back if B is pressed. */
+        if (k_down & HidNpadButton_B) {
+            ReturnToPreviousMenu();
+            return;
+        }
+
+        /* Finalize selection on pressing A. */
+        if (k_down & HidNpadButton_A) {
+            this->FinalizeSelection();
+        }
+
+        /* Update touch input. */
+        this->UpdateTouches();
+
+        const u32 prev_index = m_current_index;
+
+        if (k_down & HidNpadButton_AnyDown) {
+            /* Scroll down. */
+            if (m_current_index >= (m_cheat_entries.size() - 1)) {
+                m_current_index = 0;
+            } else {
+                m_current_index++;
+            }
+        } else if (k_down & HidNpadButton_AnyUp) {
+            /* Scroll up. */
+            if (m_current_index == 0) {
+                m_current_index = m_cheat_entries.size() - 1;
+            } else {
+                m_current_index--;
+            }
+        }
+
+        /* Scroll to the selection if it isn't visible. */
+        if (prev_index != m_current_index && !this->IsSelectionVisible()) {
+            this->ScrollToSelection();
+        }
+    }
+
+    void CheatMenu::Draw(NVGcontext *vg, u64 ns) {
+        const float x = g_screen_width / 2.0f - WindowWidth / 2.0f;
+        const float y = g_screen_height / 2.0f - WindowHeight / 2.0f;
+        char status_str[300];
+        
+        // sprintf(status_str,"Cheat %d/%ld  Opcode count [ %d ]  Cheat enabled [ %d ]  Opcode used [ %d ]  Opcode available [ %d ]",m_current_index+1,m_cheat_entries.size(),
+        // m_cheat_entries[m_current_index].definition.num_opcodes, m_enabledcnt, m_totalopcode, 1024-m_totalopcode);
+        sprintf(status_str, "Index %d Cheat enabled [%d/%ld] Opcode used [%d/1024]", m_current_index + 1,
+                m_enabledcnt, m_cheat_entries.size(), m_totalopcode);
+        DrawWindow(vg, status_str, x, y, WindowWidth, WindowHeight); //"Select a cheat press A to toggle on/off"
+        DrawTextBackground(vg, x + TextBackgroundOffset, y + TitleGap, WindowWidth - TextBackgroundOffset * 2.0f, (FileRowHeight + FileRowGap) * MaxFileRows + FileRowGap);
+
+        nvgSave(vg);
+        nvgScissor(vg, x + TextBackgroundOffset, y + TitleGap, WindowWidth - TextBackgroundOffset * 2.0f, (FileRowHeight + FileRowGap) * MaxFileRows + FileRowGap);
+
+        m_enabledcnt = 0;
+        m_totalopcode = 0;
+        for (u32 i = 0; i < m_cheat_entries.size(); i++) {
+            DmntCheatEntry &entry = m_cheat_entries[i];
+            auto style = ButtonStyle::FileSelect;
+            if (i == m_current_index) {
+                style = ButtonStyle::FileSelectSelected;
+            }
+            char namestr[100] = "";
+            if (entry.enabled)
+            {
+                strcat(namestr, " On    ");
+                m_enabledcnt ++;
+                m_totalopcode += entry.definition.num_opcodes;
+            }
+            else
+            {
+                strcat(namestr, "          ");
+            };
+            strcat(namestr, entry.definition.readable_name);
+            DrawButton(vg, namestr, x + TextBackgroundOffset + FileRowHorizontalInset, y + TitleGap + FileRowGap + i * (FileRowHeight + FileRowGap) - m_scroll_offset, WindowWidth - (TextBackgroundOffset + FileRowHorizontalInset) * 2.0f, FileRowHeight, style, ns);
+        }
+
+        nvgRestore(vg);
     }
 
     FileMenu::FileMenu(std::shared_ptr<Menu> prev_menu, const char *root) : Menu(prev_menu), m_current_index(0), m_scroll_offset(0), m_touch_start_scroll_offset(0), m_touch_finalize_selection(false) {

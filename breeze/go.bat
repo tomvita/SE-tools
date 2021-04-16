@@ -1,2 +1,2 @@
-f:\devkitPro\tools\bin\nxlink.exe -s daybreak.nro  
+f:\devkitPro\tools\bin\nxlink.exe -s Breeze.nro  
 pause

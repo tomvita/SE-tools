@@ -22,7 +22,7 @@
 #include <nanovg.h>
 #include <switch.h>
 #include "ams_su.h"
-
+#include "dmntcht.h"
 namespace dbk {
 
     struct Button {
@@ -140,6 +140,47 @@ namespace dbk {
             static constexpr float TitleGap                = 90.0f;
         public:
             MainMenu();
+
+            virtual void Update(u64 ns) override;
+            virtual void Draw(NVGcontext *vg, u64 ns) override;
+    };
+
+    class CheatMenu : public Menu {
+        private:
+            struct FileEntry {
+                char name[FS_MAX_PATH];
+            };
+        private:
+            static constexpr size_t MaxFileRows = 11;
+
+            static constexpr float WindowWidth            = 1200.0f;
+            static constexpr float WindowHeight           = 680.0f;
+            static constexpr float TitleGap               = 90.0f;
+            static constexpr float TextBackgroundOffset   = 20.0f;
+            static constexpr float FileRowHeight          = 40.0f;
+            static constexpr float FileRowGap             = 10.0f;
+            static constexpr float FileRowHorizontalInset = 10.0f;
+            static constexpr float FileListHeight         = MaxFileRows * (FileRowHeight + FileRowGap);
+        private:
+            char m_root[FS_MAX_PATH];
+            std::vector<DmntCheatEntry> m_cheat_entries;
+            u32 m_current_index;
+            float m_scroll_offset;
+            float m_touch_start_scroll_offset;
+            bool m_touch_finalize_selection;
+            DmntCheatEntry *m_cheats = nullptr;
+            u64 m_cheatCnt = 0;
+            bool *m_cheatDelete = nullptr;
+            int m_enabledcnt = 0, m_totalopcode = 0;
+
+            Result PopulateCheatEntries();
+            bool IsSelectionVisible();
+            void ScrollToSelection();
+            bool IsEntryTouched(u32 i);
+            void UpdateTouches();
+            void FinalizeSelection();
+        public:
+            CheatMenu(std::shared_ptr<Menu> prev_menu, const char *root);
 
             virtual void Update(u64 ns) override;
             virtual void Draw(NVGcontext *vg, u64 ns) override;

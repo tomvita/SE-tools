@@ -19,8 +19,8 @@
 #include <nanovg_dk.h>
 #include <nanovg/framework/CApplication.h>
 #include "ui.hpp"
-#include "ams_su.h"
-#include "dmntcht.h"
+// #include "ams_su.h"
+// #include "dmntcht.h"
 extern "C" {
 
     void userAppInit(void) {

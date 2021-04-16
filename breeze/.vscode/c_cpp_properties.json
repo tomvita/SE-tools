@@ -4,7 +4,7 @@
             "name": "DKP Aarch64",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include/**",
+                // "${workspaceFolder}/include/**",
                 "F:/devkitPro/devkitA64/include/**",
                 "F:/devkitPro/devkitA64/aarch64-none-elf/include/**",
                 "F:/devkitPro/libnx/include/**",

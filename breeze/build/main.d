@@ -1,4 +1,4 @@
-main.o: H\:/Atmosphere/troposphere/daybreak/source/main.cpp \
+main.o: H\:/SE-tools/breeze/source/main.cpp \
  F\:/devkitPro/libnx/include/switch.h \
  F\:/devkitPro/libnx/include/switch/types.h \
  F\:/devkitPro/libnx/include/switch/result.h \
@@ -165,23 +165,22 @@ main.o: H\:/Atmosphere/troposphere/daybreak/source/main.cpp \
  F\:/devkitPro/libnx/include/switch/crypto/sha1.h \
  F\:/devkitPro/libnx/include/switch/crypto/hmac.h \
  F\:/devkitPro/libnx/include/switch/crypto/crc.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg_dk.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/dk_renderer.hpp \
+ H\:/SE-tools/breeze/nanovg/include/nanovg.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg_dk.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/dk_renderer.hpp \
  F\:/devkitPro/libnx/include/deko3d.hpp \
  F\:/devkitPro/libnx/include/deko3d.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CDescriptorSet.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/common.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CMemPool.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CIntrusiveList.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CIntrusiveTree.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CShader.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CCmdMemRing.h \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CApplication.h \
- H\:/Atmosphere/troposphere/daybreak/source/ui.hpp \
- H\:/Atmosphere/troposphere/daybreak/source/ams_su.h \
- H\:/Atmosphere/troposphere/daybreak/source/dmntcht.h
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CDescriptorSet.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/common.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CMemPool.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CIntrusiveList.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CIntrusiveTree.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CShader.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CCmdMemRing.h \
+ H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CApplication.h \
+ H\:/SE-tools/breeze/source/ui.hpp H\:/SE-tools/breeze/source/ams_su.h \
+ H\:/SE-tools/breeze/source/dmntcht.h
 F\:/devkitPro/libnx/include/switch.h:
 F\:/devkitPro/libnx/include/switch/types.h:
 F\:/devkitPro/libnx/include/switch/result.h:
@@ -348,20 +347,20 @@ F\:/devkitPro/libnx/include/switch/crypto/cmac.h:
 F\:/devkitPro/libnx/include/switch/crypto/sha1.h:
 F\:/devkitPro/libnx/include/switch/crypto/hmac.h:
 F\:/devkitPro/libnx/include/switch/crypto/crc.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg_dk.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/dk_renderer.hpp:
+H\:/SE-tools/breeze/nanovg/include/nanovg.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg_dk.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/dk_renderer.hpp:
 F\:/devkitPro/libnx/include/deko3d.hpp:
 F\:/devkitPro/libnx/include/deko3d.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CDescriptorSet.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/common.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CMemPool.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CIntrusiveList.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CIntrusiveTree.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CShader.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CCmdMemRing.h:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg/framework/CApplication.h:
-H\:/Atmosphere/troposphere/daybreak/source/ui.hpp:
-H\:/Atmosphere/troposphere/daybreak/source/ams_su.h:
-H\:/Atmosphere/troposphere/daybreak/source/dmntcht.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CDescriptorSet.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/common.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CMemPool.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CIntrusiveList.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CIntrusiveTree.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CShader.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CCmdMemRing.h:
+H\:/SE-tools/breeze/nanovg/include/nanovg/framework/CApplication.h:
+H\:/SE-tools/breeze/source/ui.hpp:
+H\:/SE-tools/breeze/source/ams_su.h:
+H\:/SE-tools/breeze/source/dmntcht.h:

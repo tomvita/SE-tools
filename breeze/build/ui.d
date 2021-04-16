@@ -1,6 +1,5 @@
-ui.o: H\:/Atmosphere/troposphere/daybreak/source/ui.cpp \
- H\:/Atmosphere/troposphere/daybreak/source/ui.hpp \
- H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg.h \
+ui.o: H\:/SE-tools/breeze/source/ui.cpp H\:/SE-tools/breeze/source/ui.hpp \
+ H\:/SE-tools/breeze/nanovg/include/nanovg.h \
  F\:/devkitPro/libnx/include/switch.h \
  F\:/devkitPro/libnx/include/switch/types.h \
  F\:/devkitPro/libnx/include/switch/result.h \
@@ -167,11 +166,11 @@ ui.o: H\:/Atmosphere/troposphere/daybreak/source/ui.cpp \
  F\:/devkitPro/libnx/include/switch/crypto/sha1.h \
  F\:/devkitPro/libnx/include/switch/crypto/hmac.h \
  F\:/devkitPro/libnx/include/switch/crypto/crc.h \
- H\:/Atmosphere/troposphere/daybreak/source/ams_su.h \
- H\:/Atmosphere/troposphere/daybreak/source/ui_util.hpp \
- H\:/Atmosphere/troposphere/daybreak/source/assert.hpp
-H\:/Atmosphere/troposphere/daybreak/source/ui.hpp:
-H\:/Atmosphere/troposphere/daybreak/nanovg/include/nanovg.h:
+ H\:/SE-tools/breeze/source/ams_su.h H\:/SE-tools/breeze/source/dmntcht.h \
+ H\:/SE-tools/breeze/source/ui_util.hpp \
+ H\:/SE-tools/breeze/source/assert.hpp
+H\:/SE-tools/breeze/source/ui.hpp:
+H\:/SE-tools/breeze/nanovg/include/nanovg.h:
 F\:/devkitPro/libnx/include/switch.h:
 F\:/devkitPro/libnx/include/switch/types.h:
 F\:/devkitPro/libnx/include/switch/result.h:
@@ -338,6 +337,7 @@ F\:/devkitPro/libnx/include/switch/crypto/cmac.h:
 F\:/devkitPro/libnx/include/switch/crypto/sha1.h:
 F\:/devkitPro/libnx/include/switch/crypto/hmac.h:
 F\:/devkitPro/libnx/include/switch/crypto/crc.h:
-H\:/Atmosphere/troposphere/daybreak/source/ams_su.h:
-H\:/Atmosphere/troposphere/daybreak/source/ui_util.hpp:
-H\:/Atmosphere/troposphere/daybreak/source/assert.hpp:
+H\:/SE-tools/breeze/source/ams_su.h:
+H\:/SE-tools/breeze/source/dmntcht.h:
+H\:/SE-tools/breeze/source/ui_util.hpp:
+H\:/SE-tools/breeze/source/assert.hpp:

@@ -1,0 +1,14 @@
+breeze/Breeze.elf
+breeze/Breeze.nro
+breeze/build/ams_su.d
+breeze/build/ams_su.o
+breeze/build/Breeze.lst
+breeze/build/Breeze.map
+breeze/build/dmntcht.d
+breeze/build/dmntcht.o
+breeze/build/main.d
+breeze/build/main.o
+breeze/build/ui_util.d
+breeze/build/ui_util.o
+breeze/build/ui.d
+breeze/build/ui.o
