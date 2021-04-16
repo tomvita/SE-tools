@@ -710,39 +710,13 @@ namespace dbk {
     }
 
     void CheatMenu::FinalizeSelection() {
-        if (!m_cheat_entries[m_current_index].enabled && (m_cheat_entries[m_current_index].definition.num_opcodes + m_totalopcode > 1024))
-        {
+        if (!m_cheat_entries[m_current_index].enabled && (m_cheat_entries[m_current_index].definition.num_opcodes + m_totalopcode > 1024)) {
             ChangeMenu(std::make_shared<MessageMenu>(g_current_menu, "Cannot turn on more cheats", "You need to remove some cheats to enable this one."));
             return;
         };
         uint32_t id = m_cheat_entries[m_current_index].cheat_id;
         dmntchtToggleCheat(id);
         dmntchtGetCheatById(&(m_cheat_entries[m_current_index]), id);
-        // DBK_ABORT_UNLESS(m_current_index < m_cheat_entries.size());
-        // FileEntry &entry = m_cheat_entries[m_current_index];
-
-        // /* Determine the selected path. */
-        // char current_path[FS_MAX_PATH] = {};
-        // const int path_len = snprintf(current_path, sizeof(current_path), "%s%s/", m_root, entry.name);
-        // DBK_ABORT_UNLESS(path_len >= 0 && path_len < static_cast<int>(sizeof(current_path)));
-
-        // /* Determine if the chosen path is the bottom level. */
-        // Result rc = 0;
-        // bool bottom_level;
-        // if (R_FAILED(rc = IsPathBottomLevel(current_path, &bottom_level))) {
-        //     fatalThrow(rc);
-        // }
-
-        // /* Show exfat settings or the next file menu. */
-        // if (bottom_level) {
-        //     /* Set the update path. */
-        //     snprintf(g_update_path, sizeof(g_update_path), "%s", current_path);
-
-        //     /* Change the menu. */
-        //     ChangeMenu(std::make_shared<ValidateUpdateMenu>(g_current_menu));
-        // } else {
-        //     ChangeMenu(std::make_shared<CheatMenu>(g_current_menu, current_path));
-        // }
     }
 
     void CheatMenu::Update(u64 ns) {
@@ -764,22 +738,17 @@ namespace dbk {
 
         const u32 prev_index = m_current_index;
 
-        /* Page up/down on pressing ZL ZR. */
-        if (k_down & HidNpadButton_ZR)
-        {
+        if (k_down & HidNpadButton_ZR) {
+            /* Page down. */
             m_current_index += 10;
-            if (m_current_index >= (m_cheat_entries.size() - 1))
-            {
-
+            if (m_current_index >= (m_cheat_entries.size() - 1)) {
                 m_current_index = m_cheat_entries.size() - 1;
             }
-        } else if (k_down & HidNpadButton_ZL)
-        {
-            if (m_current_index < 10)
-            {
+        } else if (k_down & HidNpadButton_ZL) {
+            /* Page up. */
+            if (m_current_index < 10) {
                 m_current_index = 0;
-            }
-            else
+            } else
                 m_current_index -= 10;
         } else if (k_down & HidNpadButton_AnyDown) {
             /* Scroll down. */
@@ -865,15 +834,9 @@ namespace dbk {
                 strcat(namestr, "          ");
             };
             int buttoncode = entry.definition.opcodes[0];
-            for (u32 i = 0; i < buttonCodes.size(); i++)
-            {
+            for (u32 i = 0; i < buttonCodes.size(); i++) {
                 if ((buttoncode & buttonCodes[i]) == buttonCodes[i])
-                {   
-                //     char bt[10];
-                // sprintf(bt,buttonNames[i].c_str());
-                //     // strcpy(bt,(buttonNames[i]).c_str());
                     strcat(namestr, buttonNames[i].c_str());
-                };
             }
             strcat(namestr, entry.definition.readable_name);
             DrawButton(vg, namestr, x + TextBackgroundOffset + FileRowHorizontalInset, y + TitleGap + FileRowGap + i * (FileRowHeight + FileRowGap) - m_scroll_offset, WindowWidth - (TextBackgroundOffset + FileRowHorizontalInset) * 2.0f, FileRowHeight, style, ns);
