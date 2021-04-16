@@ -763,7 +763,24 @@ namespace dbk {
 
         const u32 prev_index = m_current_index;
 
-        if (k_down & HidNpadButton_AnyDown) {
+        /* Page up/down on pressing ZL ZR. */
+        if (k_down & HidNpadButton_ZR)
+        {
+            m_current_index += 10;
+            if (m_current_index >= (m_cheat_entries.size() - 1))
+            {
+
+                m_current_index = m_cheat_entries.size() - 1;
+            }
+        } else if (k_down & HidNpadButton_ZL)
+        {
+            if (m_current_index < 10)
+            {
+                m_current_index = 0;
+            }
+            else
+                m_current_index -= 10;
+        } else if (k_down & HidNpadButton_AnyDown) {
             /* Scroll down. */
             if (m_current_index >= (m_cheat_entries.size() - 1)) {
                 m_current_index = 0;
