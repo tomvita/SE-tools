@@ -51,6 +51,35 @@ namespace dbk {
         Invalid,
     };
 
+    static const std::vector<u32> buttonCodes = {0x80000001,
+                                                 0x80000002,
+                                                 0x80000004,
+                                                 0x80000008,
+                                                 0x80000010,
+                                                 0x80000020,
+                                                 0x80000040,
+                                                 0x80000080,
+                                                 0x80000100,
+                                                 0x80000200,
+                                                 0x80000400,
+                                                 0x80000800,
+                                                 0x80001000,
+                                                 0x80002000,
+                                                 0x80004000,
+                                                 0x80008000,
+                                                 0x80010000,
+                                                 0x80020000,
+                                                 0x80040000,
+                                                 0x80080000,
+                                                 0x80100000,
+                                                 0x80200000,
+                                                 0x80400000,
+                                                 0x80800000};
+
+    static const std::vector<std::string> buttonNames = {"\uE0A0 ", "\uE0A1 ", "\uE0A2 ", "\uE0A3 ", "\uE0C4 ", "\uE0C5 ", "\uE0A4 ", "\uE0A5 ", "\uE0A6 ", "\uE0A7 ", "\uE0B3 ", "\uE0B4 ", "\uE0B1 ", "\uE0AF ", "\uE0B2 ", "\uE0B0 ", "\uE091 ", "\uE092 ", "\uE090 ", "\uE093 ", "\uE145 ", "\uE143 ", "\uE146 ", "\uE144 "};
+
+
+
     class Menu {
         protected:
             static constexpr size_t MaxButtons = 32;
@@ -81,6 +110,10 @@ namespace dbk {
             std::shared_ptr<Menu> GetPrevMenu();
             virtual void Update(u64 ns) = 0;
             virtual void Draw(NVGcontext *vg, u64 ns) = 0;
+
+            bool m_HasCheatProcess = false;
+            DmntCheatProcessMetadata m_Metadata = {};
+            u32 m_combo = 2;
     };
 
     class AlertMenu : public Menu {
@@ -146,33 +179,7 @@ namespace dbk {
             virtual void Update(u64 ns) override;
             virtual void Draw(NVGcontext *vg, u64 ns) override;
     };
-    static const std::vector<u32> buttonCodes = {0x80000001,
-                                                 0x80000002,
-                                                 0x80000004,
-                                                 0x80000008,
-                                                 0x80000010,
-                                                 0x80000020,
-                                                 0x80000040,
-                                                 0x80000080,
-                                                 0x80000100,
-                                                 0x80000200,
-                                                 0x80000400,
-                                                 0x80000800,
-                                                 0x80001000,
-                                                 0x80002000,
-                                                 0x80004000,
-                                                 0x80008000,
-                                                 0x80010000,
-                                                 0x80020000,
-                                                 0x80040000,
-                                                 0x80080000,
-                                                 0x80100000,
-                                                 0x80200000,
-                                                 0x80400000,
-                                                 0x80800000};
 
-    static const std::vector<std::string> buttonNames = {"\uE0A0 ", "\uE0A1 ", "\uE0A2 ", "\uE0A3 ", "\uE0C4 ", "\uE0C5 ", "\uE0A4 ", "\uE0A5 ", "\uE0A6 ", "\uE0A7 ", "\uE0B3 ", "\uE0B4 ", "\uE0B1 ", "\uE0AF ", "\uE0B2 ", "\uE0B0 ", "\uE091 ", "\uE092 ", "\uE090 ", "\uE093 ", "\uE145 ", "\uE143 ", "\uE146 ", "\uE144 "};
-    static u32 m_combo = 2;
     class CheatMenu : public Menu
     {
     private:
@@ -209,12 +216,14 @@ namespace dbk {
         void UpdateTouches();
         void FinalizeSelection();
         void RemoveKeyfromSelection();
+        void dumpcodetofile();
 
     public:
         CheatMenu(std::shared_ptr<Menu> prev_menu, const char *root);
 
         virtual void Update(u64 ns) override;
         virtual void Draw(NVGcontext *vg, u64 ns) override;
+
     };
 
     class FileMenu : public Menu {

@@ -480,8 +480,19 @@ namespace dbk {
         const float x = g_screen_width / 2.0f - WindowWidth / 2.0f;
         const float y = g_screen_height / 2.0f - (WindowHeight + (ButtonHeight + VerticalGap)*2) / 2.0f;
 
-        this->AddButton(CheatsButtonId, "Cheats",        x + HorizontalInset, y + TitleGap,                                  WindowWidth - HorizontalInset * 2, ButtonHeight);
+        Result rc = 0;
+        if (R_FAILED(rc = dmntchtHasCheatProcess(&m_HasCheatProcess)))
+        {
+            ChangeMenu(std::make_shared<ErrorMenu>("An error has occurred", "Failed to communicate with dmnt.", rc));
+            return;
+        }
+        if (m_HasCheatProcess && (R_FAILED(rc = dmntchtGetCheatProcessMetadata(&m_Metadata))))
+        {
+            ChangeMenu(std::make_shared<ErrorMenu>("An error has occurred", "Failed to get Metadata from dmnt.", rc));
+            return;
+        }
 
+        this->AddButton(CheatsButtonId, "Cheats",        x + HorizontalInset, y + TitleGap,                                  WindowWidth - HorizontalInset * 2, ButtonHeight);
         this->AddButton(SearchButtonId, "Search Memory", x + HorizontalInset, y + TitleGap + ButtonHeight + VerticalGap,     WindowWidth - HorizontalInset * 2, ButtonHeight);
         this->AddButton(DownloadButtonId,   "Download",  x + HorizontalInset, y + TitleGap + (ButtonHeight + VerticalGap)*2, WindowWidth - HorizontalInset * 2, ButtonHeight);
         this->AddButton(ExitButtonId,   "Exit",          x + HorizontalInset, y + TitleGap + (ButtonHeight + VerticalGap)*3, WindowWidth - HorizontalInset * 2, ButtonHeight);
@@ -728,6 +739,122 @@ namespace dbk {
         u32 outid = 0;
         dmntchtAddCheat(&(m_cheat_entries[m_current_index].definition), m_cheat_entries[m_current_index].enabled, &outid);
         PopulateCheatEntries();
+    }
+
+    void CheatMenu::dumpcodetofile()
+    {
+    //     FILE *pfile;
+    //     pfile = fopen(filebuildIDStr.str().c_str(), "w");
+    //     std::stringstream SS;
+    //     std::stringstream ss;
+    //     if (pfile != NULL)
+    //     {
+    //         // GuiCheats::reloadcheats();
+    //         SS.str("");
+    //         for (u32 i = 0; i < m_cheatCnt; i++)
+    //         {
+    //             SS << "[" << m_cheat_entries[i].definition.readable_name << "]\n";
+    //             ss.str("");
+    //             for (u32 j = 0; j < m_cheat_entries[i].definition.num_opcodes; j++)
+    //             {
+    //                 u16 opcode = (m_cheat_entries[i].definition.opcodes[j] >> 28) & 0xF;
+    //                 u8 T = (m_cheat_entries[i].definition.opcodes[j] >> 24) & 0xF;
+    //                 if ((opcode == 9) && (((m_cheat_entries[i].definition.opcodes[j] >> 8) & 0xF) == 0))
+    //                 {
+    //                     ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j] << "\n";
+    //                     continue;
+    //                 }
+    //                 if (opcode == 0xC)
+    //                 {
+    //                     opcode = (m_cheat_entries[i].definition.opcodes[j] >> 24) & 0xFF;
+    //                     T = (m_cheat_entries[i].definition.opcodes[j] >> 20) & 0xF;
+    //                     u8 X = (m_cheat_entries[i].definition.opcodes[j] >> 8) & 0xF;
+    //                     if (opcode == 0xC0)
+    //                     {
+    //                         opcode = opcode * 16 + X;
+    //                     }
+    //                 }
+    //                 if (opcode == 10)
+    //                 {
+    //                     u8 O = (m_cheat_entries[i].definition.opcodes[j] >> 8) & 0xF;
+    //                     if (O == 2 || O == 4 || O == 5)
+    //                         T = 8;
+    //                     else
+    //                         T = 4;
+    //                 }
+    //                 switch (opcode)
+    //                 {
+    //                 case 0:
+    //                 case 1:
+    //                     ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j++] << " ";
+    //                     // 3+1
+    //                 case 9:
+    //                 case 0xC04:
+    //                     // 2+1
+    //                     ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j++] << " ";
+    //                 case 3:
+    //                 case 10:
+    //                     // 1+1
+    //                     ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j] << " ";
+    //                     if (T == 8 || (T == 0 && opcode == 3))
+    //                     {
+    //                         j++;
+    //                         ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j] << " ";
+    //                     }
+    //                     break;
+    //                 case 4:
+    //                 case 6:
+    //                     // 3
+    //                     ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j++] << " ";
+    //                 case 5:
+    //                 case 7:
+    //                 case 0xC00:
+    //                 case 0xC02:
+    //                     ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j++] << " ";
+    //                     // 2
+    //                 case 2:
+    //                 case 8:
+    //                 case 0xC1:
+    //                 case 0xC2:
+    //                 case 0xC3:
+    //                 case 0xC01:
+    //                 case 0xC03:
+    //                 case 0xC05:
+    //                 default:
+    //                     ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[j] << " ";
+    //                     // 1
+    //                     break;
+    //                 }
+    //                 if (j >= (m_cheat_entries[i].definition.num_opcodes)) // better to be ugly than to corrupt
+    //                 {
+    //                     printf("error encountered in addcodetofile \n ");
+    //                     ss.str("");
+    //                     for (u32 k = 0; k < m_cheat_entries[i].definition.num_opcodes; k++)
+    //                     {
+    //                         ss << std::uppercase << std::hex << std::setfill('0') << std::setw(8) << m_cheat_entries[i].definition.opcodes[k++] << " ";
+    //                     }
+    //                     ss << "\n";
+    //                     break;
+    //                 }
+    //                 ss << "\n";
+    //             }
+    //             SS << ss.str().c_str() << "\n";
+    //         }
+    //         fputs(SS.str().c_str(), pfile);
+    //         fclose(pfile);
+    //     }
+    //     else
+    //         printf("failed writing to cheat file on Edizon dir \n");
+
+    //     pfile = fopen(realCheatPath.str().c_str(), "w");
+    //     if (pfile != NULL)
+    //     {
+    //         fputs(SS.str().c_str(), pfile);
+    //         fclose(pfile);
+    //     }
+    //     else
+    //         printf("failed writing to cheat file on contents dir \n");
+    //     return true;
     }
 
     void CheatMenu::Update(u64 ns) {
