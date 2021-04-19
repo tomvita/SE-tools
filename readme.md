@@ -1,4 +1,4 @@
-Introduction: 
+# Introduction: 
 
 SE tools is a set of tools for Nintendo Switch game memory hacking. 
 
@@ -12,7 +12,7 @@ Pointersearcher-SE is the pointer searching tool. Many memory locations are dyna
 
 Here all the tools I made is package into one release for the latest version of atmosphere. 
 
-Quick Start: Search Memory
+# Quick Start: Search Memory
 1. Assuming you already have atmosphere install. Copy the content of the zip files for the switch into the root of your SD card. Restart your switch.  
 2. Launch the game. Press "HOME" when there is something interesting you want to search. Press "up" then "A". 
 3. Take the example of the game "Kingdom Rush Frontiers" and we will search for the amount of gold you have. You will see the following screen. 
@@ -41,7 +41,7 @@ Quick Start: Search Memory
 16. We proceed to find the new memory location. 
 ![2020100714071100-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95293656-71b1c080-08a6-11eb-8e15-c87bea8476fc.jpg)
 
-Quick Start: Search Pointer Chain
+# Quick Start: Search Pointer Chain
 1. Next we will use the pointer searching tool on PC. Launch either pointersearcher.exe or pointersearcher64.exe (will need this for cases where more that 4Gbyte of memory is needed). Click on "Attach dmnt". 
 2. Fetch bookmark from EdiZon SE.
 3. Copy and paste into the TargetAddress1. Click on "Dump Ptr".
@@ -63,7 +63,7 @@ Quick Start: Create cheat code
 4. Press "ZL"+B to quite and reload to see the cheat code appear on the cheats section
 ![2020100716491900-CCFA659F4857F96DDA29AFEDB2E166E6](https://user-images.githubusercontent.com/68505331/95308950-1b03b100-08bd-11eb-830f-98c1101ce1fc.jpg)
 
-Quick start Unknown value search:
+# Quick start Unknown value search:
 
 Here we use the game "Zombie Blast Crew"
 ![2020111618545200-8A979FD4D8350EA4A40B19001182DC1A](https://user-images.githubusercontent.com/68505331/99244931-c0eff700-283d-11eb-8950-58692275c64a.jpg)
@@ -90,7 +90,7 @@ bar. This is rather common. In this case probably the code only update the life 
 hack - HP that was just lost. 
 Now with these two memory found you are ready to proceed to find pointers for these two value.
 
-Quick start moon jump search:
+# Quick start moon jump search:
 1. For some games you can find moon jump this way. Please note that this isn't applicable to all games. 
 2. For many game a floating point number is added to make the character rise or fall.
 3. Press the jump button. Make sure the character is on the rise then pause the game. Do a range search. 
